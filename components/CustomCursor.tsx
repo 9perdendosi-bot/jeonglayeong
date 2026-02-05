@@ -1,81 +1,96 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
-  const [isHovering, setIsHovering] = useState(false);
   
-  // Store positions in refs to avoid re-renders during animation loop
-  const mousePosition = useRef({ x: -100, y: -100 });
-  const cursorPosition = useRef({ x: -100, y: -100 });
+  // 마우스의 목표 위치 (Target)
+  const mouse = useRef({ x: -100, y: -100 });
+  // 커서의 현재 부드러운 위치 (Current)
+  const pos = useRef({ x: -100, y: -100 });
+  
+  const requestRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Initial mouse position listener
+    const cursor = cursorRef.current;
+    if (!cursor) return;
+
+    // 1. 마우스 위치 업데이트 (이벤트 발생 시 좌표만 기록)
     const handleMouseMove = (e: MouseEvent) => {
-      mousePosition.current = { x: e.clientX, y: e.clientY };
+      mouse.current.x = e.clientX;
+      mouse.current.y = e.clientY;
     };
 
+    // 2. 인터랙티브 요소 호버 처리 (DOM 직접 조작)
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      
-      // Check for interactive elements
       const isInteractive = 
-        target.matches('a, button, input, textarea') ||
-        target.closest('a, button, input, textarea') !== null ||
-        window.getComputedStyle(target).cursor === 'pointer';
-      
-      setIsHovering(isInteractive);
+        target.matches('a, button, input, textarea, [role="button"], .interactive') ||
+        target.closest('a, button, input, textarea, [role="button"], .interactive') !== null;
+
+      if (isInteractive && cursor) {
+        cursor.style.width = '160px';
+        cursor.style.height = '160px';
+        cursor.style.opacity = '0.15';
+        cursor.style.background = 'black';
+      }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseover', handleMouseOver);
+    const handleMouseOut = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const isInteractive = 
+        target.matches('a, button, input, textarea, [role="button"]') ||
+        target.closest('a, button, input, textarea, [role="button"]') !== null;
 
-    // Animation loop for smooth movement (Lerp)
-    let animationFrameId: number;
-    
-    const animateCursor = () => {
-      // The "smoothness" factor. Lower = smoother/slower lag. Higher = snappier.
-      // 0.15 provides a nice fluid feeling.
-      const smoothness = 0.15;
+      if (isInteractive && cursor) {
+        cursor.style.width = '14px';
+        cursor.style.height = '14px';
+        cursor.style.opacity = '0.8';
+        cursor.style.background = '#fa234a';
+      }
+    };
 
-      const dx = mousePosition.current.x - cursorPosition.current.x;
-      const dy = mousePosition.current.y - cursorPosition.current.y;
+    // 3. 최적화된 렌더링 루프 (Lerp + GPU 가속)
+    const animate = () => {
+      const lerp = 0.12; // 쫀득한 움직임을 위한 보간값 (0~1)
+      
+      pos.current.x += (mouse.current.x - pos.current.x) * lerp;
+      pos.current.y += (mouse.current.y - pos.current.y) * lerp;
 
-      cursorPosition.current.x += dx * smoothness;
-      cursorPosition.current.y += dy * smoothness;
-
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${cursorPosition.current.x}px, ${cursorPosition.current.y}px, 0) translate(-50%, -50%)`;
+      if (cursor) {
+        // translate3d로 GPU 하드웨어 가속 강제 사용
+        cursor.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0) translate(-50%, -50%)`;
       }
 
-      animationFrameId = requestAnimationFrame(animateCursor);
+      requestRef.current = requestAnimationFrame(animate);
     };
 
-    // Start the loop
-    animationFrameId = requestAnimationFrame(animateCursor);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mouseover', handleMouseOver, { passive: true });
+    window.addEventListener('mouseout', handleMouseOut, { passive: true });
+    
+    requestRef.current = requestAnimationFrame(animate);
 
+    // 4. 완벽한 이벤트 구독 해제 (Memory Leak 방지)
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseover', handleMouseOver);
-      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('mouseout', handleMouseOut);
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
     };
   }, []);
 
   return (
     <div
       ref={cursorRef}
-      className="fixed top-0 left-0 rounded-full pointer-events-none z-[9999] transition-[width,height,opacity,background-color] duration-300 ease-out"
+      className="fixed top-0 left-0 rounded-full pointer-events-none z-[9999] will-change-transform transition-[width,height,opacity,background] duration-300 ease-out"
       style={{
-        // Radial gradient: Center(#3220f8) -> Middle(#e8023f) -> Outer(#fa234a)
-        // Middle color updated to #e8023f with 10% stop as requested
-        background: isHovering 
-          ? 'radial-gradient(circle, #3220f8 0%, #e8023f 10%, #fa234a 100%)' 
-          : '#fa234a',
-        width: isHovering ? '160px' : '14px',
-        height: isHovering ? '160px' : '14px',
-        opacity: isHovering ? 0.5 : 0.8,
-        // Start off-screen
-        transform: 'translate3d(-100px, -100px, 0)',
-        willChange: 'transform, width, height'
+        width: '14px',
+        height: '14px',
+        opacity: 0.8,
+        backgroundColor: '#fa234a',
+        transform: 'translate3d(-100px, -100px, 0)', // 초기 위치 하드웨어 가속 적용
       }}
     />
   );

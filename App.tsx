@@ -1,9 +1,11 @@
+
 import React, { Suspense } from 'react';
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Info from './pages/Info';
 import Contact from './pages/Contact';
+import Projects from './pages/Projects';
 import FacingTheDividedA from './pages/FacingTheDividedA';
 import CustomCursor from './components/CustomCursor';
 
@@ -31,10 +33,11 @@ export default function App() {
       <CustomCursor />
       <div className="min-h-screen flex flex-col font-sans">
         <Navbar />
-        <main className="flex-grow pt-24"> 
+        <main className="flex-grow pt-16"> 
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/projects" element={<Projects />} />
               <Route path="/info" element={<Info />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/facing-the-divided-a" element={<FacingTheDividedA />} />

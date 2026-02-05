@@ -9,6 +9,9 @@
       tailwind.config = {
         theme: {
           extend: {
+            screens: {
+              'xs': '480px', // Custom breakpoint for small mobile
+            },
             fontFamily: {
               sans: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
             },
@@ -24,18 +27,30 @@
       body {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden; /* Prevent horizontal scroll */
       }
-      /* Hide scrollbar for clean aesthetic but allow scrolling */
+
+      /* Custom Scrollbar Design */
       ::-webkit-scrollbar {
-        width: 8px;
+        width: 5px; /* Thin width */
+        height: 5px; /* Thin height for horizontal scroll */
       }
+
       ::-webkit-scrollbar-track {
-        background: transparent;
+        background: #ffffff; /* White track */
       }
+
       ::-webkit-scrollbar-thumb {
-        background: #ddd;
-        border-radius: 4px;
+        background: #d1d1d1; /* Light gray thumb */
+        border-radius: 10px; /* Fully rounded edges */
       }
+
+      /* Firefox Support */
+      html {
+        scrollbar-width: thin;
+        scrollbar-color: #d1d1d1 #ffffff;
+      }
+
       /* Hide default cursor on devices that support hover */
       @media (hover: hover) and (pointer: fine) {
         body {

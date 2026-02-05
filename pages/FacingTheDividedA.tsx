@@ -244,42 +244,52 @@ export default function FacingTheDividedA() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useLayoutEffect(() => {
-    ScrollTrigger.config({ ignoreMobileResize: true });
-    if (ScrollTrigger.isTouch === 1) {
-      ScrollTrigger.normalizeScroll(true);
-    }
+    // We use gsap.matchMedia for responsive animation control
+    const mm = gsap.matchMedia();
 
     const ctx = gsap.context(() => {
-      const track = horizontalTrackRef.current;
-      const container = containerRef.current;
-      
-      if (!track || !container) return;
+      // DESKTOP: >= 768px
+      mm.add("(min-width: 768px)", () => {
+        const track = horizontalTrackRef.current;
+        const container = containerRef.current;
+        
+        if (!track || !container) return;
 
-      const getScrollAmount = () => {
-        const trackWidth = track.scrollWidth;
-        const viewportWidth = window.innerWidth;
-        return Math.max(0, trackWidth - viewportWidth);
-      };
+        const getScrollAmount = () => {
+          const trackWidth = track.scrollWidth;
+          const viewportWidth = window.innerWidth;
+          return Math.max(0, trackWidth - viewportWidth);
+        };
 
-      gsap.to(track, {
-        x: () => -getScrollAmount(), 
-        ease: "none",
-        force3D: true,
-        scrollTrigger: {
-          trigger: container,
-          pin: true,
-          start: "top top",
-          end: () => `+=${getScrollAmount()}`,
-          scrub: true,
-          invalidateOnRefresh: true,
-          anticipatePin: 1,
+        gsap.to(track, {
+          x: () => -getScrollAmount(), 
+          ease: "none",
+          force3D: true,
+          scrollTrigger: {
+            trigger: container,
+            pin: true,
+            start: "top top",
+            end: () => `+=${getScrollAmount()}`,
+            scrub: true,
+            invalidateOnRefresh: true,
+            anticipatePin: 1,
+          }
+        });
+      });
+
+      // MOBILE: < 768px
+      // Ensure GSAP doesn't interfere with native scrolling by resetting any potential transforms
+      mm.add("(max-width: 767px)", () => {
+        const track = horizontalTrackRef.current;
+        if (track) {
+          gsap.set(track, { clearProps: "all" });
         }
       });
     }, containerRef);
 
     return () => {
       ctx.revert();
-      ScrollTrigger.normalizeScroll(false);
+      mm.revert();
     };
   }, []);
 
@@ -297,8 +307,12 @@ export default function FacingTheDividedA() {
         />
       </div>
 
-      {/* Main Container (Pinned Horizontal Scroll) */}
-      <div ref={containerRef} className="h-[100dvh] w-full relative overflow-hidden flex flex-col bg-white">
+      {/* Main Container */}
+      {/* Mobile: Normal block layout. Desktop: Pinned container (h-screen) */}
+      <div 
+        ref={containerRef} 
+        className="w-full relative flex flex-col bg-white md:h-[100dvh] md:overflow-hidden"
+      >
         
         {/* Text Area (Top Summary) - Fluid Padding and Typography */}
         <div className="flex-none pt-[3vh] md:pt-[5vh] px-[5%] md:px-[3rem] w-full z-10">
@@ -315,30 +329,55 @@ export default function FacingTheDividedA() {
            </div>
         </div>
 
-        {/* Gallery Track Container - Fluid Widths using vw */}
-        <div className="flex-grow flex items-center w-full relative overflow-hidden">
+        {/* Gallery Track Container */}
+        {/* Mobile: Horizontal Scroll (Native). Desktop: Flex center (GSAP) */}
+        <div className="flex-grow w-full relative mt-[2rem] md:mt-0 flex items-center md:overflow-hidden">
           <div 
             ref={horizontalTrackRef} 
-            className="flex flex-nowrap items-center h-[55vh] md:h-[65vh] will-change-transform"
+            className="
+              flex flex-nowrap items-center w-full
+              /* Mobile Styles */
+              h-[50vh] overflow-x-auto snap-x snap-mandatory scroll-smooth px-[5%] gap-[1rem]
+              /* Desktop Styles */
+              md:h-[65vh] md:overflow-visible md:px-0 md:gap-[2.5rem] md:snap-none
+            "
+            style={{
+                WebkitOverflowScrolling: 'touch', // Smooth scrolling on iOS
+                scrollbarWidth: 'none', // Hide scrollbar Firefox
+                msOverflowStyle: 'none', // Hide scrollbar IE/Edge
+            }}
           >
-            <div className="flex-shrink-0 w-[40vw] md:w-[30vw]"></div>
-            <div className="flex flex-nowrap gap-[1rem] md:gap-[2.5rem] h-full">
-              {galleryImages.map((src, index) => (
+            {/* Inline style to hide scrollbar for Webkit */}
+            <style>{`
+                div::-webkit-scrollbar { display: none; }
+            `}</style>
+
+            {/* Desktop Spacer - Hidden on Mobile */}
+            <div className="hidden md:block flex-shrink-0 w-[40vw] md:w-[30vw]"></div>
+            
+            {galleryImages.map((src, index) => (
                 <div 
                   key={index}
-                  className="flex-shrink-0 w-[80vw] md:w-[45vw] h-full flex items-center justify-center relative shadow-sm"
+                  className="
+                    flex-shrink-0 relative shadow-sm bg-gray-50 flex items-center justify-center
+                    /* Mobile: show next image slightly (85vw) + snap center */
+                    w-[85vw] h-full snap-center
+                    /* Desktop */
+                    md:w-[45vw] md:h-full
+                  "
                 >
                   <OptimizedImage
                     src={src}
                     alt={`Installation View ${index + 1}`}
                     className="w-full h-full"
                     imgClassName="object-cover"
-                    sizes="(max-width: 768px) 80vw, 45vw"
+                    sizes="(max-width: 768px) 85vw, 45vw"
                   />
                 </div>
-              ))}
-            </div>
-            <div className="flex-shrink-0 w-0 md:w-0"></div>
+            ))}
+
+            {/* Desktop Spacer - Hidden on Mobile */}
+            <div className="hidden md:block flex-shrink-0 w-0 md:w-0"></div>
           </div>
         </div>
       </div>

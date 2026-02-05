@@ -3,6 +3,7 @@ import React, { useLayoutEffect, useRef, useState, useEffect, useCallback } from
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import OptimizedImage, { getImgurSrcSet } from '../components/OptimizedImage';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,6 +38,7 @@ const Lightbox = ({
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   
   const modalRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -48,21 +50,28 @@ const Lightbox = ({
     setScale(1);
     setPosition({ x: 0, y: 0 });
     lastPosition.current = { x: 0, y: 0 };
+    setIsImageLoaded(false); // Reset load state
   }, [currentIndex]);
 
   // Entrance Animation
   useEffect(() => {
-    if (modalRef.current && imgRef.current) {
+    if (modalRef.current) {
       gsap.fromTo(modalRef.current, 
         { opacity: 0 }, 
         { opacity: 1, duration: 0.3, ease: "power2.out" }
       );
-      gsap.fromTo(imgRef.current,
-        { scale: 0.9, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.2)", delay: 0.1 }
-      );
     }
   }, []);
+
+  // Image Entrance Animation (runs when isImageLoaded becomes true)
+  useEffect(() => {
+    if (isImageLoaded && imgRef.current) {
+      gsap.fromTo(imgRef.current,
+        { scale: 0.95, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.4, ease: "power2.out" }
+      );
+    }
+  }, [isImageLoaded]);
 
   const handleNext = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -172,13 +181,25 @@ const Lightbox = ({
         className="relative w-full h-full flex items-center justify-center overflow-hidden touch-none"
         onWheel={handleWheel}
       >
+        {/* Loading Spinner for Lightbox */}
+        {!isImageLoaded && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-200 border-t-black"></div>
+          </div>
+        )}
+
         <img 
           ref={imgRef}
           src={images[currentIndex]} 
+          srcSet={getImgurSrcSet(images[currentIndex])}
+          sizes="90vw"
           alt={`Drawing ${currentIndex + 1}`} 
+          onLoad={() => setIsImageLoaded(true)}
           className={`
             max-w-[90vw] max-h-[85vh] object-contain shadow-2xl origin-center will-change-transform
             ${isDragging ? 'cursor-grabbing' : scale > 1 ? 'cursor-grab' : 'cursor-zoom-in'}
+            transition-opacity duration-300
+            ${isImageLoaded ? 'opacity-100' : 'opacity-0'}
           `}
           style={{
             transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${scale})`,
@@ -266,12 +287,13 @@ export default function FacingTheDividedA() {
     <div className="bg-white min-h-screen">
       {/* Banner - Fluid height using vh */}
       <div className="w-full h-[40vh] md:h-[85vh] relative bg-white overflow-hidden">
-        <img 
+        <OptimizedImage
           src="https://i.imgur.com/zcICRjS.jpeg" 
           alt="Lantern Banner" 
-          className="w-full h-full object-cover opacity-100"
-          referrerPolicy="no-referrer"
-          loading="lazy"
+          className="w-full h-full"
+          imgClassName="object-cover"
+          sizes="100vw"
+          priority={true} // LCP optimization
         />
       </div>
 
@@ -304,14 +326,14 @@ export default function FacingTheDividedA() {
               {galleryImages.map((src, index) => (
                 <div 
                   key={index}
-                  className="flex-shrink-0 w-[80vw] md:w-[45vw] h-full bg-gray-50 flex items-center justify-center relative overflow-hidden shadow-sm"
+                  className="flex-shrink-0 w-[80vw] md:w-[45vw] h-full flex items-center justify-center relative shadow-sm"
                 >
-                  <img 
+                  <OptimizedImage
                     src={src}
                     alt={`Installation View ${index + 1}`}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    referrerPolicy="no-referrer"
+                    className="w-full h-full"
+                    imgClassName="object-cover"
+                    sizes="(max-width: 768px) 80vw, 45vw"
                   />
                 </div>
               ))}
@@ -343,13 +365,14 @@ export default function FacingTheDividedA() {
                 className="group relative aspect-[4/3] bg-gray-100 overflow-hidden cursor-pointer"
                 onClick={() => setLightboxIndex(index)}
               >
-                <img 
+                <OptimizedImage
                   src={src} 
                   alt={`Drawing ${index + 1}`} 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
+                  className="w-full h-full transition-transform duration-500 group-hover:scale-105"
+                  imgClassName="object-cover"
+                  sizes="(max-width: 768px) 50vw, 33vw"
                 />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center z-10">
                   <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-xs font-bold tracking-widest uppercase bg-black/40 px-3 py-1.5 rounded-full backdrop-blur-sm">
                     View
                   </span>

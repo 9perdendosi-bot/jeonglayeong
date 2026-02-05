@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import OptimizedImage from '../components/OptimizedImage';
 
 interface Project {
   id: number;
@@ -67,18 +68,19 @@ export default function Projects() {
               {/* Thumbnail Image Container */}
               <div className="aspect-[3/4] overflow-hidden bg-gray-100 relative">
                 {project.imageUrl ? (
-                  <img 
+                  <OptimizedImage
                     src={project.imageUrl} 
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
+                    className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-105"
+                    imgClassName="object-cover"
+                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-[clamp(0.6rem,1vw,0.75rem)] text-gray-300 uppercase tracking-widest font-mono p-4 text-center">
                     Coming Soon
                   </div>
                 )}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 pointer-events-none" />
               </div>
 
               {/* Card Label Section */}

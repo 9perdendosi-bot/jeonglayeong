@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import OptimizedImage from '../components/OptimizedImage';
 
 export default function Info() {
   const [imgError, setImgError] = useState(false);
@@ -34,13 +35,11 @@ export default function Info() {
           <div className="w-full mb-[3rem] md:mb-0 relative group">
              {!imgError ? (
                <div className="transition-all duration-500 hover:scale-[1.01]">
-                 <img 
+                 <OptimizedImage
                    src="https://i.imgur.com/Ue8fXwk.png" 
                    alt="Portrait" 
-                   className="w-full h-auto object-cover block"
-                   referrerPolicy="no-referrer"
-                   onError={() => setImgError(true)}
-                   loading="lazy"
+                   className="w-full h-auto block"
+                   sizes="(max-width: 768px) 100vw, 35vw"
                  />
                </div>
              ) : (

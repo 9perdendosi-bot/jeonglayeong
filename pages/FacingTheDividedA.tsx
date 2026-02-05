@@ -15,18 +15,12 @@ const galleryImages = [
 ];
 
 const drawingImages = [
-  "https://i.imgur.com/CgeZy6g.png",
-  "https://i.imgur.com/3ehv8LN.png",
-  "https://i.imgur.com/HEjf5Mh.png",
-  "https://i.imgur.com/Hbs4Sqx.png",
-  "https://i.imgur.com/1dQ0yun.jpeg",
-  "https://i.imgur.com/P3QUjzW.jpeg",
-  "https://i.imgur.com/aAzmBZs.jpeg",
-  "https://i.imgur.com/SICVjep.png",
-  "https://i.imgur.com/ryu2a7z.jpeg",
-  "https://i.imgur.com/i479dzN.jpeg",
-  "https://i.imgur.com/09SBrZE.jpeg",
-  "https://i.imgur.com/MvI1ZSS.png",
+  "https://i.imgur.com/BjTW5g4.jpeg",
+  "https://i.imgur.com/Q1QQxbX.jpeg",
+  "https://i.imgur.com/rxrzq6F.jpeg",
+  "https://i.imgur.com/MQ33Xyn.jpeg",
+  "https://i.imgur.com/jHnxIil.png",
+  "https://i.imgur.com/aAzmBZs.jpeg"
 ];
 
 // --- Lightbox Component ---

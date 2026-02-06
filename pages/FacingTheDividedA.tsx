@@ -190,31 +190,38 @@ const Lightbox = ({
           </div>
         )}
 
-        <img 
-          ref={imgRef}
-          src={images[currentIndex]} 
-          srcSet={getImgurSrcSet(images[currentIndex])}
-          sizes="90vw"
-          alt={`Drawing ${currentIndex + 1}`} 
-          onLoad={() => setIsImageLoaded(true)}
-          className={`
-            max-w-[90vw] max-h-[85vh] object-contain shadow-2xl origin-center will-change-transform
-            ${isDragging ? 'cursor-grabbing' : scale > 1 ? 'cursor-grab' : 'cursor-zoom-in'}
-            transition-opacity duration-300
-            ${isImageLoaded ? 'opacity-100' : 'opacity-0'}
-          `}
-          style={{
-            transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${scale})`,
-            transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.2, 0, 0.2, 1)'
-          }}
-          onClick={(e) => e.stopPropagation()}
-          onDoubleClick={toggleZoom}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          draggable={false}
-        />
+        <picture className="contents">
+          <source 
+            srcSet={getImgurSrcSet(images[currentIndex], 'webp')} 
+            type="image/webp" 
+            sizes="90vw" 
+          />
+          <img 
+            ref={imgRef}
+            src={images[currentIndex]} 
+            srcSet={getImgurSrcSet(images[currentIndex])}
+            sizes="90vw"
+            alt={`Drawing ${currentIndex + 1}`} 
+            onLoad={() => setIsImageLoaded(true)}
+            className={`
+              max-w-[90vw] max-h-[85vh] object-contain shadow-2xl origin-center will-change-transform
+              ${isDragging ? 'cursor-grabbing' : scale > 1 ? 'cursor-grab' : 'cursor-zoom-in'}
+              transition-opacity duration-300
+              ${isImageLoaded ? 'opacity-100' : 'opacity-0'}
+            `}
+            style={{
+              transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${scale})`,
+              transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.2, 0, 0.2, 1)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+            onDoubleClick={toggleZoom}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            draggable={false}
+          />
+        </picture>
       </div>
 
       {/* Bottom Controls / Indicator */}

@@ -14,7 +14,7 @@ interface Artwork {
 
 const artworks: Artwork[] = [
   // 2022
-  { id: 6, title: "The Wind, The Wind", year: "2022", medium: "Charcoal, Watercolor", dimensions: "43 x 30.6 cm", src: "https://i.imgur.com/xELinb9.jpeg" },
+  { id: 6, title: "The Wind", year: "2022", medium: "Charcoal, Watercolor", dimensions: "43 x 30.6 cm", src: "https://i.imgur.com/xELinb9.jpeg" },
   
   // 2023
   { id: 2, title: "투명한.", year: "2023", medium: "Charcoal, Watercolor, Mixed media", dimensions: "53 x 46 cm", src: "https://i.imgur.com/wKYn6JC.jpeg" },

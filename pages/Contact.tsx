@@ -39,7 +39,7 @@ export default function Contact() {
           to="/facing-the-divided-a" 
           className="group flex items-center gap-[0.5rem] md:gap-[0.75rem] text-gray-400 hover:text-black transition-colors font-light"
         >
-          <span className="text-[clamp(0.8125rem,2vw,1.25rem)]">Show me some projects</span>
+          <span className="text-[clamp(0.8125rem,2vw,1.25rem)]">Show me some works</span>
           <ArrowRight className="transition-transform duration-300 group-hover:translate-x-2 w-[1rem] h-[1rem] md:w-[1.5rem] md:h-[1.5rem]" />
         </Link>
       </div>

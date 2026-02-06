@@ -18,7 +18,7 @@ const NavItem = memo(({ label, onClick, className = "" }: {
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [mobileMenuView, setMobileMenuView] = useState<'main' | 'project' | 'shop'>('main');
+  const [mobileMenuView, setMobileMenuView] = useState<'main' | 'project'>('main');
   const [isProjectHovered, setIsProjectHovered] = useState(false);
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
@@ -57,12 +57,6 @@ export default function Navbar() {
     }
   };
 
-  const handleShopClick = () => {
-    if (window.innerWidth < 768) {
-      setMobileMenuView('shop');
-    }
-  };
-
   const closeProjectOverlay = useCallback(() => setIsProjectHovered(false), []);
 
   return (
@@ -80,8 +74,9 @@ export default function Navbar() {
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              <NavItem label="Project" />
+              <NavItem label="Projects" />
             </div>
+            <Link to="/mystery" className="text-base font-bold uppercase hover:opacity-50 transition-opacity">Works</Link>
             <Link to="/info" className="text-base font-bold uppercase hover:opacity-50 transition-opacity">Info</Link>
             <Link to="/contact" className="text-base font-bold uppercase hover:opacity-50 transition-opacity">Contact</Link>
           </div>
@@ -114,12 +109,12 @@ export default function Navbar() {
             /* Main Menu View */
             <div className="flex flex-col items-center gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <Link to="/" className="text-base font-bold uppercase tracking-widest">Home</Link>
-              <NavItem label="Project" onClick={handleProjectClick} />
+              <NavItem label="Projects" onClick={handleProjectClick} />
+              <Link to="/mystery" className="text-base font-bold uppercase tracking-widest">Works</Link>
               <Link to="/info" className="text-base font-bold uppercase tracking-widest">Info</Link>
               <Link to="/contact" className="text-base font-bold uppercase tracking-widest">Contact</Link>
-              <NavItem label="Shop" onClick={handleShopClick} />
             </div>
-          ) : mobileMenuView === 'project' ? (
+          ) : (
             /* Project Sub-menu View */
             <div className="flex flex-col items-center gap-8 animate-in fade-in slide-in-from-right-4 duration-500 w-full">
               <button 
@@ -140,24 +135,6 @@ export default function Navbar() {
                   MORE COMING SOON
                 </span>
               </div>
-            </div>
-          ) : (
-            /* Shop Sub-menu View */
-            <div className="flex flex-col items-center justify-between h-full w-full py-24 animate-in fade-in slide-in-from-right-4 duration-500">
-               <button 
-                onClick={() => setMobileMenuView('main')}
-                className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] hover:text-black transition-colors"
-              >
-                <ArrowLeft size={12} /> BACK
-              </button>
-
-              <div className="flex-grow flex items-center justify-center">
-                <p className="text-xl md:text-2xl font-bold tracking-[0.3em] text-black opacity-15 select-none uppercase">
-                  open 26.02.10.
-                </p>
-              </div>
-
-              <div className="h-4" /> {/* Spacer */}
             </div>
           )}
 

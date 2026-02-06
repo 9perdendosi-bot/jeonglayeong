@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import OptimizedImage from '../components/OptimizedImage';
 
 export default function Info() {
   const [imgError, setImgError] = useState(false);
@@ -22,7 +21,7 @@ export default function Info() {
               안녕하세요. 저는 감각과 구조, 그 사이에서 발생하는 관계에 관심을 두고 작업합니다. 저의 작업은 생명체와 구조가 맺는 역학관계를 시각적으로 탐구를 출발점으로 삼아 드로잉과 설치, 몰입형 경험을 중심으로 작업하고 있습니다.
             </p>
             <p className="leading-relaxed text-[#1a1a1a] font-bold text-justify tracking-tight text-[clamp(1.1rem,2vw,1.8rem)]">
-              최근에는 라캉의 이론을 바탕으로 사과를 껍질, 씨앗, 과즙, 과육으로 분리하여 실재와 상징의 경계를 탐구하는 설치 작업을 진행했습니다. 껍질이라는 표면적 이미지와 그 이면에 숨겨진 본질 사이의 간극을 드러내며 언어와 문화의 경계를 넘나드는 더욱 확장된 예술적 소통을 &lt;꿈&gt;꾸고 있습니다.
+              최근에는 라캉의 이론을 바탕으로 사과를 껍질, 씨앗, 과즙, 과육으로 분리하여 실재와 상징의 경계를 탐구하는 설치 작업을 진행했습니다. 껍질이라는 표면적 이미지와 그 이면에 숨겨진 것 사이의 간극을 드러내며 언어와 문화의 경계를 넘나드는 더욱 확장된 예술적 소통을 &lt;꿈&gt;꾸고 있습니다.
             </p>
           </div>
 
@@ -31,17 +30,16 @@ export default function Info() {
         {/* 3. Right Content (approx 35%) */}
         <div className="w-full md:w-[35%] flex flex-col justify-between items-end h-full">
           
-          {/* Portrait Image Container - Minimalist style without blue border */}
-          <div className="w-full mb-[3rem] md:mb-0 relative group">
+          {/* Portrait Image Container - Standard img tag to remove all effects */}
+          {/* Added negative margin to move image up as requested */}
+          <div className="w-full mb-[3rem] md:mb-0 relative -mt-[2rem] md:-mt-[6rem] lg:-mt-[8rem]">
              {!imgError ? (
-               <div className="transition-all duration-500 hover:scale-[1.01]">
-                 <OptimizedImage
-                   src="https://i.imgur.com/Ue8fXwk.png" 
-                   alt="Portrait" 
-                   className="w-full h-auto block"
-                   sizes="(max-width: 768px) 100vw, 35vw"
-                 />
-               </div>
+               <img
+                 src="https://i.imgur.com/Ue8fXwk.png" 
+                 alt="Portrait" 
+                 className="w-full h-auto block"
+                 onError={() => setImgError(true)}
+               />
              ) : (
                <div className="w-full aspect-[3/4] bg-gray-100 border border-gray-200 flex flex-col items-center justify-center text-gray-400 p-6 text-center">
                  <span className="text-sm font-bold uppercase tracking-widest mb-2">Image Not Found</span>

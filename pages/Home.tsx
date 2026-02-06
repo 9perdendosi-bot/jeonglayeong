@@ -43,7 +43,7 @@ const Home = () => {
           to="/facing-the-divided-a" 
           className="pointer-events-auto flex items-center gap-2 px-[2rem] py-[1rem] bg-black text-white rounded-full font-bold tracking-widest uppercase hover:opacity-80 transition-all shadow-xl active:scale-95 text-[clamp(0.7rem,1.5vw,0.85rem)]"
         >
-          View Project <ArrowRight size={14} />
+          View Work <ArrowRight size={14} />
         </Link>
       </div>
     </div>

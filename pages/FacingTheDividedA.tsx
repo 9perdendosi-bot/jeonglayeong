@@ -16,12 +16,14 @@ const galleryImages = [
 ];
 
 const drawingImages = [
-  "https://i.imgur.com/BjTW5g4.jpeg",
-  "https://i.imgur.com/Q1QQxbX.jpeg",
-  "https://i.imgur.com/rxrzq6F.jpeg",
-  "https://i.imgur.com/MQ33Xyn.jpeg",
-  "https://i.imgur.com/jHnxIil.png",
-  "https://i.imgur.com/aAzmBZs.jpeg"
+  "https://i.imgur.com/aKeCSK8.jpeg",
+  "https://i.imgur.com/Pzf5Reb.jpeg",
+  "https://i.imgur.com/WHQyaDw.jpeg",
+  "https://i.imgur.com/VSq8F1n.jpeg",
+  "https://i.imgur.com/mFDmVsv.jpeg",
+  "https://i.imgur.com/vXVik7U.jpeg",
+  "https://i.imgur.com/PWOCpEJ.png",
+  "https://i.imgur.com/UPd3JLV.jpeg"
 ];
 
 // --- Lightbox Component ---
@@ -392,12 +394,8 @@ export default function FacingTheDividedA() {
 
         {/* Drawings Section */}
         <section className="mt-[3rem] md:mt-[6rem]">
-          <div className="flex items-center gap-4 mb-[2rem] md:mb-[3rem]">
-            <h3 className="font-bold uppercase tracking-widest text-black text-[clamp(1.25rem,3vw,1.875rem)]">Drawings</h3>
-            <div className="h-px flex-grow bg-gray-200"></div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-[1rem] md:gap-[1.5rem]">
+          {/* Removed Title and Separator Line */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-[1rem] md:gap-[1.5rem]">
             {drawingImages.map((src, index) => (
               <div 
                 key={index}
@@ -409,7 +407,7 @@ export default function FacingTheDividedA() {
                   alt={`Drawing ${index + 1}`} 
                   className="w-full h-full transition-transform duration-500 group-hover:scale-105"
                   imgClassName="object-cover"
-                  sizes="(max-width: 768px) 50vw, 33vw"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center z-10">
                   <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-xs font-bold tracking-widest uppercase bg-black/40 px-3 py-1.5 rounded-full backdrop-blur-sm">
@@ -420,16 +418,16 @@ export default function FacingTheDividedA() {
             ))}
           </div>
 
-          <div className="mt-[3rem] text-center pb-[3rem]">
+          <div className="mt-[3rem] text-center pb-[1rem]">
             <p className="text-gray-400 uppercase tracking-[0.3em] text-[clamp(0.625rem,0.8vw,0.75rem)]">
               간극에 대한 해부 언어 사이의 잔여<br/>
-              2024-2025
+              2025
             </p>
           </div>
         </section>
 
         {/* Updated Collection Inquiry Area */}
-        <div className="mt-[5rem] border-t border-gray-100 pt-[4rem] pb-[8rem] text-center">
+        <div className="mt-0 border-t border-gray-100 pt-[4rem] pb-[8rem] text-center">
           <h4 className="font-bold text-black mb-[2rem] uppercase tracking-widest text-[clamp(0.875rem,1.2vw,1rem)]">작품 소장에 관하여</h4>
           <p className="text-gray-500 leading-relaxed max-w-2xl mx-auto break-keep whitespace-pre-line text-[clamp(0.75rem,1.5vw,0.9rem)]">
             본 작업은 향후 다른 매체와 새로운 연작으로 확장될 가능성을 지니고 있습니다.

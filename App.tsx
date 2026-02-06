@@ -7,6 +7,7 @@ import Info from './pages/Info';
 import Contact from './pages/Contact';
 import Projects from './pages/Projects';
 import FacingTheDividedA from './pages/FacingTheDividedA';
+import Mystery from './pages/Mystery';
 import CustomCursor from './components/CustomCursor';
 
 const LoadingSpinner = () => (
@@ -41,6 +42,7 @@ export default function App() {
               <Route path="/info" element={<Info />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/facing-the-divided-a" element={<FacingTheDividedA />} />
+              <Route path="/mystery" element={<Mystery />} />
             </Routes>
           </Suspense>
         </main>

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+
+import React, { useEffect, useRef, useState } from 'react';
 
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -9,8 +10,28 @@ export default function CustomCursor() {
   const pos = useRef({ x: -100, y: -100 });
   
   const requestRef = useRef<number | null>(null);
+  const [isEnabled, setIsEnabled] = useState(false);
 
   useEffect(() => {
+    const checkEnvironment = () => {
+      // 1024px 미만 or 터치 디바이스(pointer: coarse)인 경우 커스텀 커서 비활성화
+      const isSmallScreen = window.innerWidth < 1024;
+      const isTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+      
+      setIsEnabled(!isSmallScreen && !isTouch);
+    };
+
+    // 초기 체크
+    checkEnvironment();
+
+    // 리사이즈 시 재확인
+    window.addEventListener('resize', checkEnvironment);
+    return () => window.removeEventListener('resize', checkEnvironment);
+  }, []);
+
+  useEffect(() => {
+    if (!isEnabled) return;
+
     const cursor = cursorRef.current;
     if (!cursor) return;
 
@@ -79,7 +100,10 @@ export default function CustomCursor() {
         cancelAnimationFrame(requestRef.current);
       }
     };
-  }, []);
+  }, [isEnabled]);
+
+  // 비활성화 상태면 렌더링 안함
+  if (!isEnabled) return null;
 
   return (
     <div

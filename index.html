@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -51,8 +52,8 @@
         scrollbar-color: #d1d1d1 #ffffff;
       }
 
-      /* Hide default cursor on devices that support hover */
-      @media (hover: hover) and (pointer: fine) {
+      /* Hide default cursor only on large screens with fine pointer */
+      @media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
         body {
           cursor: none;
         }

@@ -20,7 +20,7 @@ const artworks: Artwork[] = [
   { id: 2, title: "투명한.", year: "2023", medium: "Charcoal, Watercolor, Mixed media", dimensions: "53 x 46 cm", src: "https://i.imgur.com/wKYn6JC.jpeg" },
   
   // 2024
-  { id: 4, title: "제목(미정),(영향 같은 것)", year: "2024", medium: "Pencil, Watercolor", dimensions: "19 x 23.5 cm", src: "https://i.imgur.com/xMjEzb0.jpeg" },
+  { id: 4, title: "제목(미정),(영향과 관련된 것)", year: "2024", medium: "Pencil, Watercolor", dimensions: "19 x 23.5 cm", src: "https://i.imgur.com/xMjEzb0.jpeg" },
   { id: 3, title: "제목(미정),(영향 또는 눈과 관련된 것)", year: "2024", medium: "Washer, Pencil, Watercolor", dimensions: "27.3 x 22.1 cm", src: "https://i.imgur.com/pWdJDO5.jpeg" },
   
   // 2025
